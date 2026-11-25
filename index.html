@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Тренажёр выживания</title>
+<link href="https://fonts.googleapis.com/css2?family=Underdog&display=swap" rel="stylesheet">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#f6f7fb;--card:#fff;--tx:#1b1f2a;--mu:#5d6578;--bd:#dfe3ee;--ac:#4f46e5;--ac2:#fff;--ok:#12805c;--okb:#e2f6ee;--er:#b42318;--erb:#fdeceb;color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#13151c;--card:#1c1f2a;--tx:#eceef5;--mu:#9aa2b8;--bd:#2d3243;--ac:#8b86ff;--ac2:#12131a;--ok:#4ade9f;--okb:#12302a;--er:#ff8a80;--erb:#3a1d1d;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#13151c;--card:#1c1f2a;--tx:#eceef5;--mu:#9aa2b8;--bd:#2d3243;--ac:#8b86ff;--ac2:#12131a;--ok:#4ade9f;--okb:#12302a;--er:#ff8a80;--erb:#3a1d1d;color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.wrap{max-width:900px;margin:0 auto;padding:16px}
+h1{font-size:1.5rem;margin:.2em 0}h2{font-size:1.2rem;margin:.2em 0 .6em}
+.mu{color:var(--mu)}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}
+.tab{border:1px solid var(--bd);background:var(--card);color:var(--tx);padding:9px 14px;border-radius:10px;cursor:pointer;font:inherit}
+.tab.on{background:var(--ac);color:var(--ac2);border-color:var(--ac)}
+.tab.done::after{content:" ✓"}
+.sub{display:flex;gap:6px;margin-bottom:12px}
+.sub .tab{padding:6px 12px;font-size:.92rem}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:16px;margin-bottom:14px}
+code{background:var(--bg);border:1px solid var(--bd);padding:1px 5px;border-radius:5px;font-size:.9em}
+pre{background:var(--bg);border:1px solid var(--bd);padding:10px;border-radius:8px;overflow-x:auto;margin:8px 0}
+textarea{width:100%;min-height:130px;font:14px/1.45 ui-monospace,Menlo,Consolas,monospace;background:var(--bg);color:var(--tx);border:1px solid var(--bd);border-radius:8px;padding:10px;resize:vertical}
+iframe{width:100%;height:150px;border:1px solid var(--bd);border-radius:8px;background:#fff;margin-top:8px}
+.btn{background:var(--ac);color:var(--ac2);border:0;padding:10px 18px;border-radius:10px;font:inherit;cursor:pointer;margin-top:10px}
+.st{margin-top:8px;padding:8px 10px;border-radius:8px;display:none}
+.st.ok{display:block;background:var(--okb);color:var(--ok)}.st.er{display:block;background:var(--erb);color:var(--er)}
+.q{margin-bottom:14px}.q label{display:block;padding:4px 0;cursor:pointer}
+.q.ok .res{color:var(--ok)}.q.er .res{color:var(--er)}
+.rbb{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}.sub{flex-wrap:wrap}.rb{margin-top:8px}.xl{border-collapse:collapse;margin:8px 0}.xl td,.xl th{border:1px solid var(--bd);padding:4px 14px;text-align:center}.xl th{background:var(--bg);color:var(--mu)}
+.bar{height:8px;background:var(--bd);border-radius:8px;overflow:hidden}.bar i{display:block;height:100%;background:var(--ac)}
+input[type=text]{font:inherit;padding:10px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--tx);width:100%;max-width:360px}
+#cert{border:6px double #b8892b;background:#fffdf5;color:#2a2418;text-align:center;padding:34px 18px;border-radius:6px;margin-top:14px}
+#cert h2{font-size:1.9rem;color:#8a6414;letter-spacing:.05em;margin:0 0 6px}
+#cert .nm{font-size:1.7rem;font-weight:700;margin:12px 0;border-bottom:1px solid #b8892b;display:inline-block;padding:0 24px}
+#cert small{color:#6b5d3e}
+html:root:root{color-scheme:dark}
+body{--bg:#0b0607;--card:#160c0e;--tx:#eadcd7;--mu:#9a8581;--bd:#3d171b;--ac:#c1121f;--ac2:#fff;--ok:#7bd88f;--okb:#12261a;--er:#ff6b6b;--erb:#3a1215;background:radial-gradient(ellipse at 50% -10%,#2a0b0f,var(--bg) 60%) fixed}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:50;background:radial-gradient(ellipse at center,transparent 45%,rgba(0,0,0,.8))}
+body::before{content:"";position:fixed;left:0;right:0;top:0;height:36px;pointer-events:none;z-index:49;background:linear-gradient(#a30d16,#a30d16) 0 0/100% 9px no-repeat,repeating-linear-gradient(90deg,#a30d16 0 6px,transparent 6px 53px) 0 0/100% 26px no-repeat,repeating-linear-gradient(90deg,transparent 0 22px,#8b0a12 22px 28px,transparent 28px 71px) 0 0/100% 36px no-repeat}
+h1,h2,.tab,.btn{font-family:"Underdog",Georgia,serif}
+h1{font-size:2.6rem;color:#d0151f;letter-spacing:.08em;line-height:1.1;margin-top:30px;text-shadow:0 0 14px rgba(220,20,30,.6);animation:fl 5s infinite}
+h1 span{display:block;font:400 .95rem/1.4 system-ui,sans-serif;letter-spacing:.02em;color:var(--mu);text-shadow:none;margin-top:6px}
+@keyframes fl{0%,91%,100%{opacity:1}92%{opacity:.25}93%{opacity:1}95%{opacity:.45}96%{opacity:1}}
+@media (prefers-reduced-motion:reduce){h1{animation:none}}
+.card{box-shadow:0 6px 26px rgba(120,0,10,.22)}
+.tab{letter-spacing:.03em}.tab:hover{border-color:var(--ac)}
+.tab.on{box-shadow:0 0 14px rgba(200,20,30,.55)}
+.btn{background:linear-gradient(#d0141f,#8d0b13);box-shadow:0 0 14px rgba(200,20,30,.45);text-transform:uppercase;letter-spacing:.06em}.btn:hover{filter:brightness(1.25)}
+.bar i{background:linear-gradient(90deg,#7a0a12,#e01b27);box-shadow:0 0 10px #c1121f;transition:width .6s}
+.q label:hover{color:#ff6b6b}
+#cert{background:#120708;color:#eadcd7;border:6px double #a30d16;box-shadow:0 0 30px rgba(190,15,25,.4)}
+#cert h2{color:#d0151f;text-shadow:0 0 10px rgba(220,20,30,.5)}#cert .nm{border-bottom-color:#a30d16;font-family:Underdog,Georgia,serif}#cert small{color:#9a8581}
+@media print{body::before,body::after{display:none}body *{visibility:hidden}#cert,#cert *{visibility:visible}#cert{position:absolute;left:0;top:0;width:100%}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Курс выживания<span>Word · Excel · PowerPoint · HTML/CSS</span></h1>
+  <div class="mu">Телефон звонит… Пройди три блока (теория → практика → тест) и докажи, что достоин сертификата выжившего.</div>
+  <div class="tabs" id="courses"></div><div class="bar" style="margin-top:4px"><i id="bar"></i></div>
+  <div class="tabs" id="nav"></div>
+  <div id="main"></div>
+</div>
+<script>
+const $=s=>document.querySelector(s);
+const esc=s=>s.replace(/&/g,"&amp;").replace(/</g,"&lt;");
+let ALL={};try{ALL=JSON.parse(localStorage.getItem("hc_trainer2")||"{}")}catch(e){}
+const save=()=>{try{localStorage.setItem("hc_trainer2",JSON.stringify(ALL))}catch(e){}};
+let P,B,COURSE,codes,cid="html";
+const dom=c=>new DOMParser().parseFromString(c,"text/html");
+const rx=(c,r)=>r.test(c.replace(/\s+/g," "));
+
+const COURSES={html:{name:"HTML и CSS",blocks:[
+{t:"1. HTML",
+theory:`<h2>Структура и основные теги</h2>
+<p>HTML описывает содержимое страницы с помощью <b>тегов</b>. Большинство тегов парные: открывающий и закрывающий.</p>
+<pre>${esc(`<h1>Заголовок</h1>
+<p>Абзац текста</p>
+<ul><li>Пункт</li></ul>
+<a href="https://example.com">Ссылка</a>
+<img src="cat.jpg" alt="Кот">`)}</pre>
+<p><code>h1</code>–<code>h6</code> — заголовки, <code>p</code> — абзац, <code>ul/ol</code> + <code>li</code> — списки, <code>a</code> с атрибутом <code>href</code> — ссылка, <code>img</code> — картинка (обязателен <code>alt</code>).</p>`,
+tasks:[
+{q:"Создайте заголовок <h1> с любым текстом и абзац <p> с текстом.",start:"",html:1,
+ ck:c=>{const d=dom(c);return !!(d.querySelector("h1")?.textContent.trim()&&d.querySelector("p")?.textContent.trim())}},
+{q:"Создайте маркированный список <ul> минимум из трёх <li> и ссылку <a> с атрибутом href.",start:"",html:1,
+ ck:c=>{const d=dom(c);return d.querySelectorAll("ul li").length>=3&&!!d.querySelector("a[href]")}}],
+quiz:[
+{q:"Какой тег создаёт самый важный заголовок?",o:["<head>","<h1>","<title>","<h6>"],a:1},
+{q:"Какой атрибут задаёт адрес ссылки?",o:["src","link","href","url"],a:2},
+{q:"Какой тег создаёт нумерованный список?",o:["<ul>","<ol>","<li>","<nl>"],a:1},
+{q:"Зачем у <img> нужен атрибут alt?",o:["Задаёт размер","Альтернативный текст для доступности","Задаёт ссылку","Включает анимацию"],a:1},
+{q:"Какой тег обозначает абзац?",o:["<br>","<div>","<p>","<span>"],a:2}]},
+{t:"2. CSS",
+theory:`<h2>Селекторы, цвета и блочная модель</h2>
+<p>CSS задаёт внешний вид. Правило состоит из <b>селектора</b> и блока объявлений.</p>
+<pre>${esc(`h1 { color: red; }          /* по тегу */
+.lead { font-size: 20px; }  /* по классу */
+#top { margin: 0; }         /* по id */`)}</pre>
+<p><b>Блочная модель:</b> контент → <code>padding</code> (внутренний отступ) → <code>border</code> (рамка) → <code>margin</code> (внешний отступ). Скругление — <code>border-radius</code>.</p>`,
+tasks:[
+{q:"Сделайте заголовок h1 красным (color), а у .lead задайте font-size: 20px.",html:0,
+ base:'<h1>Привет</h1><p class="lead">Вводный текст</p>',start:"/* ваш CSS */\n",
+ ck:c=>rx(c,/h1\s*\{[^}]*color\s*:\s*(red|#f00|#ff0000|rgb\(\s*255\s*,\s*0\s*,\s*0\s*\))/i)&&rx(c,/\.lead\s*\{[^}]*font-size\s*:\s*20px/i)},
+{q:"Для .card задайте padding: 16px, рамку border и border-radius.",html:0,
+ base:'<div class="card">Карточка</div>',start:"/* ваш CSS */\n",
+ ck:c=>rx(c,/\.card\s*\{[^}]*padding\s*:\s*16px/i)&&rx(c,/\.card\s*\{[^}]*border\s*:/i)&&rx(c,/\.card\s*\{[^}]*border-radius\s*:/i)}],
+quiz:[
+{q:"Как выбрать элементы с class=\"box\"?",o:["#box",".box","box","*box"],a:1},
+{q:"Какое свойство задаёт цвет текста?",o:["background","font-color","color","text-style"],a:2},
+{q:"Что находится между контентом и рамкой?",o:["margin","padding","gap","outline"],a:1},
+{q:"Как скруглить углы?",o:["border-radius","corner","round","border-style"],a:0},
+{q:"Какой символ начинает селектор по id?",o:[".","#","@","$"],a:1}]},
+{t:"3. Вёрстка",
+theory:`<h2>Flexbox и адаптивность</h2>
+<p><b>Flexbox</b> выстраивает элементы в ряд или столбец.</p>
+<pre>${esc(`.row {
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+  align-items: center;
+}`)}</pre>
+<p><code>justify-content</code> — выравнивание по главной оси, <code>align-items</code> — по поперечной, <code>gap</code> — расстояние между элементами. Адаптивность даёт <code>@media (max-width: 600px) { ... }</code>.</p>`,
+tasks:[
+{q:"Сделайте .row flex-контейнером (display: flex) с gap: 12px.",html:0,
+ base:'<div class="row"><div>1</div><div>2</div><div>3</div></div>',start:"/* ваш CSS */\n",
+ ck:c=>rx(c,/\.row\s*\{[^}]*display\s*:\s*flex/i)&&rx(c,/\.row\s*\{[^}]*gap\s*:\s*12px/i)},
+{q:"Для .row задайте justify-content: space-between и добавьте медиазапрос @media (max-width: ...) с flex-direction: column.",html:0,
+ base:'<div class="row"><div>1</div><div>2</div><div>3</div></div>',start:"/* ваш CSS */\n.row { display: flex; }\n",
+ ck:c=>rx(c,/\.row\s*\{[^}]*justify-content\s*:\s*space-between/i)&&rx(c,/@media\s*\(\s*max-width\s*:[^)]+\)\s*\{[^@]*flex-direction\s*:\s*column/i)}],
+quiz:[
+{q:"Какое значение включает Flexbox?",o:["display: block","display: flex","position: flex","float: flex"],a:1},
+{q:"Что задаёт gap?",o:["Размер шрифта","Расстояние между элементами","Цвет рамки","Высоту строки"],a:1},
+{q:"Какое свойство направляет flex-элементы в столбец?",o:["flex-direction: column","flex-wrap: column","align: column","display: column"],a:0},
+{q:"Что используют для адаптивной вёрстки?",o:["@import","@media","@font-face","@keyframes"],a:1},
+{q:"Какое свойство выравнивает по поперечной оси?",o:["justify-content","align-items","gap","order"],a:1}]}
+]},
+word:{name:"Microsoft Word",
+ribbon:{"Главная":["Полужирный","Курсив","Маркированный список","Выравнивание по центру","Шрифт"],"Вставка":["Таблица","Рисунок","Номер страницы","Гиперссылка"],"Макет":["Поля","Ориентация","Размер","Колонки"],"Рецензирование":["Орфография","Примечание","Исправления"]},
+blocks:[
+{t:"1. Работа с текстом",theory:"<h2>Форматирование текста</h2><p>Выделите текст, затем примените команду на вкладке <b>«Главная»</b>: шрифт, абзац, стили. Ctrl+B — полужирный, Ctrl+I — курсив, Ctrl+Z — отмена, Ctrl+A — выделить всё.</p>",
+tasks:[{type:"rb",q:"Сделайте выделенный текст полужирным.",a:"Главная>Полужирный"},{type:"rb",q:"Выровняйте заголовок по центру.",a:"Главная>Выравнивание по центру"}],
+quiz:[{q:"Сочетание клавиш для полужирного начертания?",o:["Ctrl+B","Ctrl+U","Ctrl+P","Ctrl+K"],a:0},{q:"Где находятся команды шрифта?",o:["Вкладка «Главная»","Вкладка «Вид»","Вкладка «Файл»","Вкладка «Вставка»"],a:0},{q:"Как отменить последнее действие?",o:["Ctrl+Z","Ctrl+S","Ctrl+A","Ctrl+N"],a:0},{q:"Что делает Ctrl+A?",o:["Выделяет весь текст","Копирует","Печатает","Закрывает документ"],a:0}]},
+{t:"2. Оформление страницы",theory:"<h2>Параметры страницы</h2><p>Поля, ориентация и размер бумаги настраиваются на вкладке <b>«Макет»</b>. Стандартный размер — A4. Нумерация страниц добавляется через «Вставка».</p>",
+tasks:[{type:"rb",q:"Сделайте ориентацию страницы альбомной.",a:"Макет>Ориентация"},{type:"rb",q:"Добавьте нумерацию страниц.",a:"Вставка>Номер страницы"}],
+quiz:[{q:"Где задаются поля страницы?",o:["Макет","Рецензирование","Главная","Вид"],a:0},{q:"Какие бывают ориентации страницы?",o:["Книжная и альбомная","Прямая и косая","Узкая и широкая","Верхняя и нижняя"],a:0},{q:"Какой размер бумаги стандартный?",o:["A4","A0","B7","A10"],a:0},{q:"Через какую вкладку добавляют колонтитулы?",o:["Вставка","Макет","Рецензирование","Вид"],a:0}]},
+{t:"3. Вставка и проверка",theory:"<h2>Объекты и рецензирование</h2><p>Таблицы, рисунки и ссылки добавляет вкладка <b>«Вставка»</b>. Проверка орфографии и примечания — на вкладке <b>«Рецензирование»</b>.</p>",
+tasks:[{type:"rb",q:"Вставьте таблицу в документ.",a:"Вставка>Таблица"},{type:"rb",q:"Запустите проверку орфографии.",a:"Рецензирование>Орфография"}],
+quiz:[{q:"Как вставить таблицу?",o:["Вставка → Таблица","Главная → Шрифт","Макет → Поля","Файл → Печать"],a:0},{q:"Что проверяет команда «Орфография»?",o:["Ошибки в тексте","Размер файла","Цвет страницы","Поля"],a:0},{q:"Что такое примечание?",o:["Комментарий к фрагменту текста","Колонтитул","Таблица","Шрифт"],a:0},{q:"Сочетание клавиш для гиперссылки?",o:["Ctrl+K","Ctrl+B","Ctrl+L","Ctrl+E"],a:0}]}]},
+excel:{name:"Microsoft Excel",blocks:[
+{t:"1. Формулы",theory:"<h2>Основы формул</h2><p>Формула начинается со знака <code>=</code>. Ячейки: <code>A1</code>, диапазон: <code>A1:A3</code>. Пример: <code>=SUM(A1:A3)</code>.</p>",
+tasks:[{type:"xl",q:"Найдите сумму диапазона A1:A3.",g:[[10,20],[30,40],[50,60]],a:90},{type:"xl",q:"Найдите среднее значение B1:B3 (AVERAGE).",g:[[10,20],[30,40],[50,60]],a:40}],
+quiz:[{q:"С какого символа начинается формула?",o:["=","+","#","@"],a:0},{q:"Что означает A1:A3?",o:["Диапазон из трёх ячеек","Деление","Одну ячейку","Ошибку"],a:0},{q:"Какая функция суммирует значения?",o:["SUM","ADD","PLUS","TOTAL"],a:0},{q:"Что такое ячейка?",o:["Пересечение строки и столбца","Целый лист","Файл","Диаграмма"],a:0}]},
+{t:"2. Функции",theory:"<h2>Статистические функции</h2><p><code>MAX</code> — наибольшее, <code>MIN</code> — наименьшее, <code>AVERAGE</code> — среднее, <code>COUNT</code> — количество чисел.</p>",
+tasks:[{type:"xl",q:"Найдите максимум во всём диапазоне A1:B3.",g:[[5,8],[12,3],[7,9]],a:12},{type:"xl",q:"Найдите минимум в диапазоне B1:B3.",g:[[5,8],[12,3],[7,9]],a:3}],
+quiz:[{q:"Что вернёт MAX(A1:A3)?",o:["Наибольшее значение","Сумму","Среднее","Количество"],a:0},{q:"Что делает AVERAGE?",o:["Считает среднее","Считает сумму","Сортирует","Удаляет"],a:0},{q:"Что считает COUNT?",o:["Ячейки с числами","Сумму чисел","Символы","Листы"],a:0},{q:"Как зафиксировать ссылку на ячейку?",o:["Знаком $ — $A$1","Знаком #","Скобками","Кавычками"],a:0}]},
+{t:"3. Расчёты",theory:"<h2>Арифметика в ячейках</h2><p>Операторы: <code>+ - * /</code>. Умножение и деление выполняются раньше сложения; скобки меняют порядок. Пример: <code>=A1*B1</code>.</p>",
+tasks:[{type:"xl",q:"Умножьте A1 на B1.",g:[[100,5],[200,10]],a:500},{type:"xl",q:"Посчитайте A1 + A2 * B2.",g:[[100,5],[200,10]],a:2100}],
+quiz:[{q:"Что вернёт =2+3*4?",o:["14","20","24","9"],a:0},{q:"Что значит ##### в ячейке?",o:["Не хватает ширины столбца","Формула верна","Файл повреждён","Лист скрыт"],a:0},{q:"Как скопировать формулу вниз?",o:["Протянуть маркер заполнения","Ctrl+P","Удалить столбец","Нажать F1"],a:0},{q:"Что покажет =(2+3)*4?",o:["20","14","24","9"],a:0}]}]},
+ppt:{name:"Microsoft PowerPoint",
+ribbon:{"Главная":["Создать слайд","Макет","Полужирный","Фигуры"],"Вставка":["Рисунок","Таблица","Диаграмма","Видео"],"Конструктор":["Темы","Вариант цвета","Размер слайда"],"Переходы":["Эффект перехода","Длительность"],"Анимация":["Добавить анимацию","Область анимации"],"Показ слайдов":["С начала","Настройка показа"]},
+blocks:[
+{t:"1. Слайды",theory:"<h2>Структура презентации</h2><p>Новый слайд добавляется на вкладке <b>«Главная»</b> (Ctrl+M). Макет определяет расположение заголовка и содержимого. Файл сохраняется в формате <code>.pptx</code>.</p>",
+tasks:[{type:"rb",q:"Добавьте новый слайд.",a:"Главная>Создать слайд"},{type:"rb",q:"Смените макет слайда.",a:"Главная>Макет"}],
+quiz:[{q:"Какое сочетание создаёт новый слайд?",o:["Ctrl+M","Ctrl+Q","Ctrl+W","Ctrl+J"],a:0},{q:"Что такое макет слайда?",o:["Расположение заполнителей","Анимация","Звук","Формат файла"],a:0},{q:"Какой формат у современных презентаций?",o:[".pptx",".docx",".xlsx",".txt"],a:0},{q:"Где находится кнопка «Создать слайд»?",o:["Главная","Переходы","Рецензия","Показ слайдов"],a:0}]},
+{t:"2. Оформление",theory:"<h2>Темы и медиа</h2><p>Тема оформления выбирается на вкладке <b>«Конструктор»</b>. Рисунки, таблицы и диаграммы добавляются через <b>«Вставка»</b>. Меньше текста — лучше читаемость.</p>",
+tasks:[{type:"rb",q:"Примените тему оформления.",a:"Конструктор>Темы"},{type:"rb",q:"Вставьте диаграмму.",a:"Вставка>Диаграмма"}],
+quiz:[{q:"Где выбирают тему оформления?",o:["Конструктор","Переходы","Анимация","Показ слайдов"],a:0},{q:"Что важно для читаемости слайда?",o:["Короткий текст и контраст","Много текста","Мелкий шрифт","Пёстрый фон"],a:0},{q:"Через какую вкладку вставляют диаграмму?",o:["Вставка","Главная","Переходы","Конструктор"],a:0},{q:"Что такое SmartArt?",o:["Готовые графические схемы","Тип файла","Шрифт","Звук"],a:0}]},
+{t:"3. Анимация и показ",theory:"<h2>Эффекты и демонстрация</h2><p><b>Переход</b> — эффект смены слайдов, <b>анимация</b> — эффект для объектов на слайде. Показ с начала — F5, с текущего слайда — Shift+F5, выход — Esc.</p>",
+tasks:[{type:"rb",q:"Добавьте анимацию выбранному объекту.",a:"Анимация>Добавить анимацию"},{type:"rb",q:"Запустите показ с первого слайда.",a:"Показ слайдов>С начала"}],
+quiz:[{q:"Какая клавиша запускает показ с начала?",o:["F5","F1","F9","F12"],a:0},{q:"Чем переход отличается от анимации?",o:["Переход — между слайдами, анимация — для объектов","Ничем","Переход — для текста","Анимация — это шрифт"],a:0},{q:"Как выйти из показа?",o:["Esc","Tab","Caps Lock","Insert"],a:0},{q:"Что делает Shift+F5?",o:["Показ с текущего слайда","Сохранение","Печать","Закрытие"],a:0}]}]}};
+function setCourse(id){cid=id;COURSE=COURSES[id];B=COURSE.blocks;P=ALL[id]=ALL[id]||{tasks:B.map(b=>b.tasks.map(()=>0)),score:[null,null,null],name:""};codes=B.map(b=>b.tasks.map(t=>t.start||""));cur=0;sub="theory";view="block";
+ B.forEach(b=>b.quiz.forEach(q=>{if(q.sh)return;q.sh=1;const c=q.o[q.a];q.o.sort(()=>Math.random()-.5);q.a=q.o.indexOf(c)}))}
+function calc(f,g){f=String(f).trim().toUpperCase();if(f[0]!=="=")return NaN;
+ const pr=s=>{const m=/^([A-D])(\d+)$/.exec(s);return [m[1].charCodeAt(0)-65,+m[2]-1]};
+ const rng=s=>{const [a,b]=s.split(":").map(pr),o=[];for(let r=a[1];r<=b[1];r++)for(let c=a[0];c<=b[0];c++)o.push(+g[r][c]);return o};
+ try{const e=f.slice(1).replace(/[A-D]\d+:[A-D]\d+/g,m=>"["+rng(m)+"]").replace(/\b[A-D]\d+\b/g,m=>{const p=pr(m);return +g[p[1]][p[0]]});
+  if(!/^[\d+\-*\/().,\[\]\sA-Z]*$/.test(e))return NaN;
+  const S=(...a)=>a.flat().reduce((x,y)=>x+y,0);
+  return Function("SUM,AVERAGE,MAX,MIN","return "+e)(S,(...a)=>S(...a)/a.flat().length,(...a)=>Math.max(...a.flat()),(...a)=>Math.min(...a.flat()))}catch(x){return NaN}}
+function buzz(){try{const A=new(window.AudioContext||window.webkitAudioContext)(),t=A.currentTime,g=A.createGain(),d=A.createWaveShaper(),f=A.createBiquadFilter(),c=new Float32Array(256);
+ for(let k=0;k<256;k++){const x=k/128-1;c[k]=Math.tanh(x*6)}d.curve=c;f.type="lowpass";f.frequency.value=3500;
+ d.connect(f);f.connect(g);g.connect(A.destination);
+ g.gain.setValueAtTime(0,t);[0,.3].forEach(s=>{g.gain.setValueAtTime(.6,t+s);g.gain.setValueAtTime(.6,t+s+.22);g.gain.linearRampToValueAtTime(0,t+s+.26)});
+ [220,233,440,466].forEach(h=>{const o=A.createOscillator();o.type="square";o.frequency.setValueAtTime(h,t);o.frequency.setValueAtTime(h*.8,t+.3);o.connect(d);o.start(t);o.stop(t+.6)});
+ setTimeout(()=>A.close(),1000)}catch(e){}}
+function buzzMid(){try{const A=new(window.AudioContext||window.webkitAudioContext)(),t=A.currentTime,g=A.createGain(),f=A.createBiquadFilter();f.type="lowpass";f.frequency.value=1800;f.connect(g);g.connect(A.destination);
+ g.gain.setValueAtTime(.45,t);g.gain.setValueAtTime(.45,t+.5);g.gain.exponentialRampToValueAtTime(.001,t+.65);
+ [150,158,300].forEach(h=>{const o=A.createOscillator();o.type="square";o.frequency.setValueAtTime(h,t);o.frequency.exponentialRampToValueAtTime(h*.85,t+.65);o.connect(f);o.start(t);o.stop(t+.65)});
+ setTimeout(()=>A.close(),1000)}catch(e){}}
+function buzzSoft(){try{const A=new(window.AudioContext||window.webkitAudioContext)(),t=A.currentTime,g=A.createGain();g.connect(A.destination);
+ g.gain.setValueAtTime(.5,t);g.gain.setValueAtTime(.5,t+.45);g.gain.exponentialRampToValueAtTime(.001,t+.7);
+ [[311,0],[233,.22]].forEach(([f,s])=>{const o=A.createOscillator();o.type="triangle";o.frequency.setValueAtTime(f,t+s);o.frequency.exponentialRampToValueAtTime(f*.93,t+s+.3);o.connect(g);o.start(t+s);o.stop(t+s+.34)});
+ setTimeout(()=>A.close(),1000)}catch(e){}}
+function buzzHarsh(){try{const A=new(window.AudioContext||window.webkitAudioContext)(),t=A.currentTime,g=A.createGain(),d=A.createWaveShaper(),c=new Float32Array(256);
+ for(let k=0;k<256;k++){const x=k/128-1;c[k]=Math.sign(x)*Math.pow(Math.abs(x),.3)}d.curve=c;
+ g.gain.setValueAtTime(.55,t);g.gain.setValueAtTime(.55,t+.5);g.gain.exponentialRampToValueAtTime(.001,t+.8);d.connect(g);g.connect(A.destination);
+ [[1400,2100],[1480,2250],[2000,3000]].forEach(([a,b2])=>{const o=A.createOscillator();o.type="sawtooth";o.frequency.setValueAtTime(a,t);o.frequency.exponentialRampToValueAtTime(b2,t+.35);o.frequency.exponentialRampToValueAtTime(a*.8,t+.8);
+  const l=A.createOscillator(),lg=A.createGain();l.frequency.value=38;lg.gain.value=120;l.connect(lg);lg.connect(o.frequency);l.start(t);l.stop(t+.8);
+  o.connect(d);o.start(t);o.stop(t+.8)});
+ const nb=A.createBuffer(1,Math.floor(A.sampleRate*.8),A.sampleRate),nd=nb.getChannelData(0);for(let k=0;k<nd.length;k++)nd[k]=Math.random()*2-1;
+ const ns=A.createBufferSource();ns.buffer=nb;const ng=A.createGain();ng.gain.setValueAtTime(.5,t);ng.gain.exponentialRampToValueAtTime(.001,t+.3);ns.connect(ng);ng.connect(A.destination);ns.start(t);
+ setTimeout(()=>A.close(),1200)}catch(e){}}
+function buzzOld(){try{const A=new(window.AudioContext||window.webkitAudioContext)(),t=A.currentTime,g=A.createGain();g.gain.setValueAtTime(.7,t);g.gain.exponentialRampToValueAtTime(.001,t+.9);g.connect(A.destination);
+ [[110,"sawtooth"],[117,"square"],[55,"sawtooth"]].forEach(([f,ty])=>{const o=A.createOscillator();o.type=ty;o.frequency.setValueAtTime(f,t);o.frequency.exponentialRampToValueAtTime(f*.6,t+.9);o.connect(g);o.start(t);o.stop(t+.9)});setTimeout(()=>A.close(),1200)}catch(e){}}
+function okSnd(){try{const A=new(window.AudioContext||window.webkitAudioContext)(),t=A.currentTime,g=A.createGain();g.gain.setValueAtTime(.35,t);g.gain.exponentialRampToValueAtTime(.001,t+.6);g.connect(A.destination);[660,880].forEach((f,k)=>{const o=A.createOscillator();o.type="sine";o.frequency.value=f;o.connect(g);o.start(t+k*.15);o.stop(t+k*.15+.35)});setTimeout(()=>A.close(),1000)}catch(e){}}
+function quizRun(){
+ const b=B[cur],box=$("#qbox"),n=b.quiz.length;let i=0,r=0;
+ const step=()=>{
+  if(i>=n){const pc=Math.round(r/n*100);if(P.score[cur]===null||pc>P.score[cur])P.score[cur]=pc;save();nav();
+   box.innerHTML=`<h2>Результат: ${r} из ${n} (${pc}%)</h2><div class="st ${pc>=70?"ok":"er"}">${pc>=70?"Тест сдан — ты выжил!":"Нужно 70%. Убийца ещё на свободе, попробуй снова."}</div><button class="btn" id="again">Пройти заново</button><div class="mu" style="margin-top:8px">Лучший результат: ${P.score[cur]}%. Проходной балл: 70%.</div>`;
+   $("#again").onclick=()=>{i=0;r=0;step()};return}
+  const q=b.quiz[i];
+  box.innerHTML=`<div class="mu">Вопрос ${i+1} из ${n}</div><div class="bar" style="margin:6px 0 12px"><i style="width:${i/n*100}%"></i></div><b>${esc(q.q)}</b><div id="opts">`+q.o.map((o,j)=>`<button class="tab" style="display:block;width:100%;text-align:left;margin-top:8px" data-j="${j}">${esc(o)}</button>`).join("")+`</div><div class="st" id="fb"></div>`;
+  box.querySelectorAll("#opts button").forEach(bt=>bt.onclick=()=>{
+   const j=+bt.dataset.j,good=j===q.a;
+   box.querySelectorAll("#opts button").forEach(x=>{x.disabled=true;if(+x.dataset.j===q.a)x.style.borderColor="var(--ok)"});
+   if(!good)bt.style.borderColor="var(--er)";
+   if(good){r++;okSnd()}else buzz();
+   const fb=$("#fb");fb.className="st "+(good?"ok":"er");fb.textContent=good?"Верно!":"Неверно. Правильный ответ: "+q.o[q.a];
+   const nx=document.createElement("button");nx.className="btn";nx.textContent=i+1<n?"Дальше":"Показать результат";nx.onclick=()=>{i++;step()};box.appendChild(nx)});
+ };step()}
+const check=(t,c)=>t.type==="xl"?Math.abs(calc(c,t.g)-t.a)<1e-9:t.type==="rb"?c===t.a:t.ck(c);
+function taskBody(t,i){
+ if(t.type==="rb")return `<div class="rb" data-r="${i}"><div class="sub">${Object.keys(COURSE.ribbon).map(k=>`<button class="tab" data-t="${k}">${k}</button>`).join("")}</div><div class="rbb"></div><div class="mu">Выбрано: <b class="sel">${esc(codes[cur][i]||"—")}</b></div></div>`;
+ if(t.type==="xl")return `<table class="xl"><tr><th></th>${t.g[0].map((_,c)=>`<th>${"ABCD"[c]}</th>`).join("")}</tr>${t.g.map((r,n)=>`<tr><th>${n+1}</th>${r.map(v=>`<td>${v}</td>`).join("")}</tr>`).join("")}</table><input type="text" data-x="${i}" placeholder="Например: =SUM(A1:A3)" value="${esc(codes[cur][i]||"").replace(/"/g,"&quot;")}">`;
+ return `<div class="mu" style="font-size:.9rem">${t.html?"Пишите HTML":"Пишите CSS для готовой разметки"}</div><textarea data-i="${i}" spellcheck="false">${esc(codes[cur][i])}</textarea><iframe sandbox="" data-f="${i}" title="Предпросмотр"></iframe>`}
+let cur=0,sub="theory",view="block";
+
+const passed=i=>P.tasks[i].every(x=>x)&&P.score[i]!==null&&P.score[i]>=70;
+const allDone=()=>[0,1,2].every(passed);
+
+function nav(){
+  $("#courses").innerHTML=Object.keys(COURSES).map(k=>`<button class="tab ${k===cid?"on":""}" data-k="${k}">${COURSES[k].name}</button>`).join("");
+  document.querySelectorAll("#courses .tab").forEach(t=>t.onclick=()=>{setCourse(t.dataset.k);render()});
+  $("#nav").innerHTML=B.map((b,i)=>`<button class="tab ${view==="block"&&cur===i?"on":""} ${passed(i)?"done":""}" data-b="${i}">${b.t}</button>`).join("")+
+    `<button class="tab ${view==="cert"?"on":""} ${allDone()?"done":""}" data-b="c">Сертификат</button>`;
+  $("#bar").style.width=([0,1,2].filter(passed).length/3*100)+"%";
+  document.querySelectorAll("#nav .tab").forEach(t=>t.onclick=()=>{
+    if(t.dataset.b==="c"){view="cert"}else{view="block";cur=+t.dataset.b;sub="theory"}
+    render();});
+}
+function render(){nav();view==="cert"?renderCert():renderBlock();}
+
+function preview(b,i){
+  const t=B[b].tasks[i],c=codes[b][i];
+  return t.html?c:`<style>body{font-family:sans-serif}${c}</style>${t.base}`;
+}
+function renderBlock(){
+  const b=B[cur];
+  let h=`<div class="sub">`+["theory","practice","test"].map((k,n)=>`<button class="tab ${sub===k?"on":""}" data-s="${k}">${["Теория","Практика","Тест"][n]}</button>`).join("")+`</div>`;
+  if(sub==="theory"){h+=`<div class="card">${b.theory}</div>`}
+  if(sub==="practice"){
+    h+=b.tasks.map((t,i)=>`<div class="card"><b>Задание ${i+1}.</b> ${esc(t.q)}
+      ${taskBody(t,i)}
+      <button class="btn" data-c="${i}">Проверить</button>
+      <div class="st ${P.tasks[cur][i]?"ok":""}" id="st${i}">${P.tasks[cur][i]?"Задание выполнено ✓":""}</div></div>`).join("");
+  }
+  if(sub==="test")h+='<div class="card" id="qbox"></div>';
+  if(false){
+    h+=`<div class="card"><form id="qf">`+b.quiz.map((q,i)=>`<div class="q" id="q${i}"><b>${i+1}. ${esc(q.q)}</b>`+
+      q.o.map((o,j)=>`<label><input type="radio" name="q${i}" value="${j}"> ${esc(o)}</label>`).join("")+`<div class="res"></div></div>`).join("")+
+      `<button class="btn" type="button" id="sendq">Завершить тест</button>
+      <div class="st" id="qres"></div></form>
+      <div class="mu" style="margin-top:8px">Проходной балл: 70%. ${P.score[cur]!==null?"Лучший результат: "+P.score[cur]+"%":""}</div></div>`;
+  }
+  $("#main").innerHTML=h;
+  document.querySelectorAll(".sub .tab").forEach(t=>t.onclick=()=>{sub=t.dataset.s;renderBlock()});
+  document.querySelectorAll("textarea").forEach(ta=>{
+    const i=+ta.dataset.i,fr=document.querySelector(`[data-f="${i}"]`);
+    fr.srcdoc=preview(cur,i);
+    ta.oninput=()=>{codes[cur][i]=ta.value;fr.srcdoc=preview(cur,i)};
+  });
+  document.querySelectorAll("[data-c]").forEach(bt=>bt.onclick=()=>{
+    const i=+bt.dataset.c,st=$("#st"+i);let ok=false;
+    try{ok=check(B[cur].tasks[i],codes[cur][i])}catch(e){}
+    if(ok){P.tasks[cur][i]=1;save();st.className="st ok";st.textContent="Верно! Ты выжил в этом задании ✓";nav()}
+    else{buzz();st.className="st er";st.textContent="Неверно… Он совсем рядом. Перечитай условие и попробуй ещё раз."}
+  });
+  document.querySelectorAll("[data-r]").forEach(el=>{const i=+el.dataset.r,R=COURSE.ribbon,bb=el.querySelector(".rbb");
+    const show=k=>{bb.innerHTML=R[k].map(x=>`<button class="tab" data-q="${x}">${x}</button>`).join("");
+      bb.querySelectorAll("button").forEach(y=>y.onclick=()=>{codes[cur][i]=k+">"+y.dataset.q;el.querySelector(".sel").textContent=codes[cur][i]})};
+    el.querySelectorAll("[data-t]").forEach(t=>t.onclick=()=>show(t.dataset.t));show(Object.keys(R)[0])});
+  document.querySelectorAll("[data-x]").forEach(inp=>inp.oninput=()=>{codes[cur][+inp.dataset.x]=inp.value});
+  if(sub==="test")quizRun();
+  const sq=$("#sendq");
+  if(sq)sq.onclick=()=>{
+    let r=0;
+    b.quiz.forEach((q,i)=>{
+      const v=document.querySelector(`input[name="q${i}"]:checked`),el=$("#q"+i);
+      const ok=v&&+v.value===q.a;if(ok)r++;
+      el.className="q "+(ok?"ok":"er");
+      el.querySelector(".res").textContent=ok?"Верно":"Неверно. Правильный ответ: "+q.o[q.a];
+    });
+    const pc=Math.round(r/b.quiz.length*100);if(r<b.quiz.length)buzz();
+    if(P.score[cur]===null||pc>P.score[cur])P.score[cur]=pc;
+    save();
+    const st=$("#qres");st.className="st "+(pc>=70?"ok":"er");
+    st.textContent=`Результат: ${r} из ${b.quiz.length} (${pc}%). `+(pc>=70?"Тест сдан — ты выжил!":"Нужно 70%. Убийца ещё на свободе, попробуй снова.");
+    nav();
+  };
+}
+function renderCert(){
+  let h=`<div class="card"><h2>Сертификат</h2>`;
+  if(!allDone()){
+    h+=`<p>Сертификат откроется после прохождения всех трёх блоков (выполненная практика и тест от 70%).</p><ul>`+
+      B.map((b,i)=>`<li>${b.t}: практика ${P.tasks[i].filter(x=>x).length}/${b.tasks.length}, тест ${P.score[i]===null?"не пройден":P.score[i]+"%"} ${passed(i)?"✓":""}</li>`).join("")+`</ul></div>`;
+    $("#main").innerHTML=h;return;
+  }
+  h+=`<p>Поздравляем, все блоки пройдены! Введите имя для сертификата.</p>
+    <input type="text" id="nm" placeholder="Имя и фамилия" value="${esc(P.name).replace(/"/g,"&quot;")}">
+    <br><button class="btn" id="mk">Получить сертификат</button> <button class="btn" id="pr" style="display:none">Печать / PDF</button></div><div id="out"></div>`;
+  $("#main").innerHTML=h;
+  const mk=()=>{
+    const n=$("#nm").value.trim();if(!n){$("#nm").focus();return}
+    P.name=n;save();
+    const d=new Date().toLocaleDateString("ru-RU",{day:"numeric",month:"long",year:"numeric"});
+    let x=0;for(const ch of n+d)x=(x*31+ch.charCodeAt(0))%1000000;
+    const avg=Math.round(P.score.reduce((a,b)=>a+b,0)/3);
+    $("#out").innerHTML=`<div id="cert"><small>УЧЕБНЫЙ ТРЕНАЖЁР</small><h2>СЕРТИФИКАТ ВЫЖИВШЕГО</h2>
+      <div>подтверждает, что</div><div class="nm">${esc(n)}</div>
+      <div>выжил(-а) в курсе «${COURSE.name}»:<br>${B.map(b=>"«"+b.t.replace(/^\d+\.\s*/,"")+"»").join(", ")} (практика и тесты)</div>
+      <div style="margin-top:10px">Средний балл тестов: <b>${avg}%</b></div>
+      <div style="margin-top:16px"><small>${d} · № ${String(x).padStart(6,"0")}</small></div></div>`;
+    $("#pr").style.display="inline-block";
+  };
+  $("#mk").onclick=mk;$("#pr").onclick=()=>window.print();
+  if(P.name)mk();
+}
+setCourse("html");render();
+</script>
+</body>
+</html>
